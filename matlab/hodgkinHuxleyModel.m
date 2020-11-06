@@ -1,4 +1,30 @@
-% hodgkinHuxleyModel(6.3, 53, 2, 0.2, 15, 0.01)
+% Hodgkin-Huxley Model Simulator 
+% Inputs: 
+%    T - temperature
+%    Is - Stimulus current
+%    Is_begin - Start of stimulus
+%    Is_duration - Stimulus duration
+%    Is_duration - Stimulus duration
+%    total_time - Duration of simulation
+%    total_time - Duration of simulation
+%    step - Step
+% Outputs: vector struct
+%    vectors.gK = gK_vector;
+%    vectors.gNa = gNa_vector;
+%    vectors.IK = IK_vector;
+%    vectors.INa = INa_vector;
+%    vectors.IL = IL_vector;
+%    vectors.Vm = Vm_vector;
+%    vectors.Im = Im_vector;
+%    vectors.n = n_vector;
+%    vectors.m = m_vector;
+%    vectors.h = h_vector;
+% Date: 9 out 2020
+% Authors:
+%   Rafael Cruz, 50380
+%   Diana Castaneda, ....
+
+% Exemple: hodgkinHuxleyModel(6.3, 53, 2, 0.2, 15, 0.01)
 function [vectors] = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time, step)
     Vr = -60;
     Vm0 = -60;
@@ -12,8 +38,8 @@ function [vectors] = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time
     EK = nernstPotential(K_in_concentration, K_ex_concentration, 1, T, "C");
     ENa = nernstPotential(Na_in_concentration, Na_ex_concentration, 1, T, "C");
     
-    % EK = -72.100; % mV
-    % ENa = 52.4;
+    EK = -72.100; % mV
+    ENa = 52.4;
     EL = -49.187;
 
     Cm = 1.0; % micro Farad / cm^2;

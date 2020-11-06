@@ -95,6 +95,12 @@ function pushbutton1_Callback(hObject, eventdata, handles)
     % hodgkinHuxleyModel(6.3, 53, 2, 0.2, 15, 0.01)
     vectors = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time, step);
     
+    disp(["Is_begin", Is_begin]);
+    disp(["total_time", total_time]);
+    disp(["step", step]);
+    disp(["Is_duration", Is_duration]);
+    disp(["Is", Is]);
+    disp(["T", T]);
     
     axes(handles.axes1);
     plot(vectors.Vm);
@@ -113,6 +119,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
     hold on;
     plot(vectors.IL);
     grid on;
+    
     
     axes(handles.axes4);
     plot(vectors.n);
