@@ -7,7 +7,8 @@
 %    Is_duration - Stimulus duration
 %    total_time - Duration of simulation
 %    total_time - Duration of simulation
-%    step - Step
+%    stimulus_number - Number of new stimulus
+%    stimulus_interval - Interval between different stimulus
 % Outputs: vector struct
 %    vectors.gK = gK_vector;
 %    vectors.gNa = gNa_vector;
@@ -22,12 +23,13 @@
 % Date: 9 out 2020
 % Authors:
 %   Rafael Cruz, 50380
-%   Diana Castaneda, ....
+%   Diana Castaneda, 51549
 
-% Exemple: hodgkinHuxleyModel(6.3, 53, 2, 0.2, 15, 0.01)
-function [vectors] = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time, step)
-    Vr = -60;
-    Vm0 = -60;
+% Exemple: hodgkinHuxleyModel(6.3, 53, 2, 0.2, 15, 0.01, 1, 1)
+function [vectors] = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time, step, stimulus_number, stimulus_interval)
+    
+    Vr = -60; % Resting potential mV;
+    Vm0 = -60;  % Initial Membrane potential mV;
     
     Na_in_concentration = 49.5; % mM;
     Na_ex_concentration = 437.0; % mM;
@@ -35,10 +37,11 @@ function [vectors] = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time
     K_ex_concentration = 29; % mM;
 
     
-    EK = nernstPotential(K_in_concentration, K_ex_concentration, 1, T, "C");
-    ENa = nernstPotential(Na_in_concentration, Na_ex_concentration, 1, T, "C");
     
-    EK = -72.100; % mV
+    % EK = nernstPotential(K_in_concentration, K_ex_concentration, 1, T, "C");
+    % ENa = nernstPotential(Na_in_concentration, Na_ex_concentration, 1, T, "C");
+    
+    EK = -72.100; 
     ENa = 52.4;
     EL = -49.187;
 
@@ -46,47 +49,48 @@ function [vectors] = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time
 
     % T = 6.3;
     
-    n0 = 0.31768;
-    m0 = 0.05293;
-    h0 = 0.59612;
+    % n0 = 0.31768;
+    % m0 = 0.05293;
+    % h0 = 0.59612;
 
     gK_max = 36.0; % mS / cm^2;
     gNa_max = 120.0;
+    
     gL = 0.3;
     gK = 0.367;
     gNa = 0.011;
 
-    % R = 8.3145; % constante dos gases perfeitos J * K^⁻1 * mol^-1;
-    % F = 96485; % 96485.332 constante de faraday C / mol;
-
-    time = total_time; % 10 msec 
+    time = total_time; % msec 
     delta_t = step; % msec
-    total_time_deltas = time / delta_t;
+    total_time_deltas = time / delta_t; % time vector length 
     
-    % Is_begin = 2;
-    % Is = 53;
-    % Is_duration = 0.2;
+    % Stimulus current vector (0 or Is)
+    Im_vector = stimulusPlot(Is, Is_begin, Is_duration, time, delta_t, stimulus_number, stimulus_interval);
 
-    Im_vector = stimulusPlot(Is, Is_begin, Is_duration, time, delta_t);
+    % Vector creation with zeros
+    n_vector = zeros(1, total_time_deltas);
+    m_vector = zeros(1, total_time_deltas);
+    h_vector = zeros(1, total_time_deltas);
 
-    n_vector = zeros(1, total_time_deltas+1);
-    m_vector = zeros(1, total_time_deltas+1);
-    h_vector = zeros(1, total_time_deltas+1);
+    IK_vector = zeros(1, total_time_deltas);
+    INa_vector = zeros(1, total_time_deltas);
+    IL_vector = zeros(1, total_time_deltas);
 
-    IK_vector = zeros(1, total_time_deltas+1);
-    INa_vector = zeros(1, total_time_deltas+1);
-    IL_vector = zeros(1, total_time_deltas+1);
+    Vm_vector = zeros(1, total_time_deltas);
 
-    Vm_vector = zeros(1, total_time_deltas+1);
+    gK_vector = zeros(1, total_time_deltas);
+    gNa_vector = zeros(1, total_time_deltas);
 
-    gK_vector = zeros(1, total_time_deltas+1);
-    gNa_vector = zeros(1, total_time_deltas+1);
-
-
+    % Call channelRates function to fetch opening and closing rates of channel
+    % subunits
+    % Then convert to cell to assign variables
     initialRates = channelRates(0);
     initialRatesCell = num2cell(initialRates);
     [an, bn, am, bm, ah, bh] = initialRatesCell{:};
 
+    % Call subunitsOpenProb function to fetchrobability of opening channels 
+    % subunits for the given transition rates.
+    % Then convert to cell to assign variables 
     initialProbs = subunitsOpenProb(an, bn, am, bm, ah, bh);
     initialProbsCell = num2cell(initialProbs);
     [n, m, h] = initialProbsCell{:};

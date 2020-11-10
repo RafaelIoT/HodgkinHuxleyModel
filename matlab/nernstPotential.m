@@ -1,4 +1,4 @@
-% Nernst potential 
+% Nernst potential
 % Inputs: 
 %    T - temperature
 %    temp_unit - "C"/"K"/"F"
@@ -8,10 +8,9 @@
 % Date: 9 out 2020
 % Authors:
 %   Rafael Cruz, 50380
-%   Diana Castaneda, ....
-
+%   Diana Castaneda, 51549
+% Example: nernstPotential(0.22, 0.02, 1, 26.85, "C")
 function [E] = nernstPotential(q_in_conc, q_ex_conc, z, temp, temp_unit)
-    % Example: nernstPotential(0.22, 0.02, 1, 26.85, "C")
     
     R = 8.3145; % constante dos gases perfeitos J * K^⁻1 * mol^-1;
     F = 96485; % 96485.332 constante de faraday C / mol;

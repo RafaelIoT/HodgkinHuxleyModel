@@ -1,3 +1,12 @@
+% Opening and closing rates for channel subunits given a reduced membrane
+% potential
+% Inputs: 
+%    mv - Reduced membrane potential
+% Outputs: rates - Vector with all subunit rates
+% Date: 9 out 2020
+% Authors:
+%   Rafael Cruz, 50380
+%   Diana Castaneda, 51549
 function [rates] = channelRates(vM)
 
     if vM == 10 

@@ -1,3 +1,9 @@
+% GUIDE Interface for Hodgkin-Huxley Model
+% Date: 9 out 2020
+% Authors:
+%   Rafael Cruz, 50380
+%   Diana Castaneda, 51549
+
 function varargout = hh_gui(varargin)
 % HH_GUI MATLAB code for hh_gui.fig
 %      HH_GUI, by itself, creates a new HH_GUI or raises the existing
@@ -22,7 +28,7 @@ function varargout = hh_gui(varargin)
 
 % Edit the above text to modify the response to help hh_gui
 
-% Last Modified by GUIDE v2.5 04-Nov-2020 17:30:11
+% Last Modified by GUIDE v2.5 08-Nov-2020 18:46:41
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -79,37 +85,52 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
     cla(handles.axes1,'reset');
     cla(handles.axes2,'reset');
     cla(handles.axes3,'reset');
     cla(handles.axes4,'reset');
     cla(handles.axes5,'reset');
     
+    % Fetch inputs from GUI
     Is_begin = str2double(get(handles.edit1, 'String')); 
     total_time = str2double(get(handles.edit2, 'String')); 
     step = str2double(get(handles.edit3, 'String')); 
     Is_duration = str2double(get(handles.edit4, 'String')); 
     Is = str2double(get(handles.edit5, 'String')); 
     T = str2double(get(handles.edit6, 'String')); 
+    stimulus_number = str2double(get(handles.edit7, 'String')); 
+    stimulus_interval = str2double(get(handles.edit8, 'String')); 
     
-    % hodgkinHuxleyModel(6.3, 53, 2, 0.2, 15, 0.01)
-    vectors = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time, step);
+    % run hodgkin Huxley Model simulation 
+    % Example: hodgkinHuxleyModel(6.3, 53, 2, 0.2, 15, 0.01, 1, 1)
+    vectors = hodgkinHuxleyModel(T, Is, Is_begin, Is_duration, total_time, step, stimulus_number, stimulus_interval);
     
-    disp(["Is_begin", Is_begin]);
-    disp(["total_time", total_time]);
-    disp(["step", step]);
-    disp(["Is_duration", Is_duration]);
-    disp(["Is", Is]);
-    disp(["T", T]);
+    %disp(["Is_begin", Is_begin]);
+    %disp(["total_time", total_time]);
+    %disp(["step", step]);
+    %disp(["Is_duration", Is_duration]);
+    %disp(["Is", Is]);
+    %disp(["T", T]);
+    %disp(["stimulus_number", stimulus_number]);
+    %disp(["stimulus_interval", stimulus_interval]);
+    
+    % Plot configuration
     
     axes(handles.axes1);
     plot(vectors.Vm);
+    legend("Vm");
+    xlabel("Time (ms)");
+    ylabel("Voltage (mV)");
     grid on;
     
     axes(handles.axes2);
     plot(vectors.gK);
     hold on;
     plot(vectors.gNa);
+    legend("gK", "gNa");
+    xlabel("Time (ms)");
+    ylabel("Conductance (mS / cm²)");
     grid on;
     
     axes(handles.axes3);
@@ -118,6 +139,9 @@ function pushbutton1_Callback(hObject, eventdata, handles)
     plot(vectors.INa);
     hold on;
     plot(vectors.IL);
+    legend("IK", "INa", "IL");
+    xlabel("Time (ms)");
+    ylabel("Current (uA / cm²)");
     grid on;
     
     
@@ -127,10 +151,15 @@ function pushbutton1_Callback(hObject, eventdata, handles)
     plot(vectors.m);
     hold on;
     plot(vectors.h);
+    legend("n", "m", "h");
+    xlabel("Time (ms)");
     grid on;
     
     axes(handles.axes5);
     plot(vectors.Im);
+    legend("Is");
+    xlabel("Time (ms)");
+    ylabel("Current (uA / cm²)");
     grid on;
 
 % --- Executes on slider movement.
@@ -283,6 +312,52 @@ function edit6_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function edit6_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit7_Callback(hObject, eventdata, handles)
+% hObject    handle to edit7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit7 as text
+%        str2double(get(hObject,'String')) returns contents of edit7 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit7_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit8_Callback(hObject, eventdata, handles)
+% hObject    handle to edit8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit8 as text
+%        str2double(get(hObject,'String')) returns contents of edit8 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
